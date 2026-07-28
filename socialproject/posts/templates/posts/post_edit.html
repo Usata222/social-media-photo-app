@@ -1,0 +1,21 @@
+{% extends 'users/base.html' %}
+{% block body %}
+<h2 class="text-2xl m-4 sm:m-10 font-bold">✏️ Edit Post</h2>
+<div class="container py-5 px-2 sm:mx-10">
+
+<form method="post" class="bg-white shadow-md mx-auto my-5 px-4 sm:px-8 rounded pt-6 pb-8 mb-4 w-full max-w-xl">
+  {% csrf_token %}
+  <img class="w-full object-cover rounded mb-4" style="height: 16rem;" src="{{ post.image.url }}" alt="">
+  <div class="mb-2">
+    <label class="block text-grey-700 text-sm font-bold mb-2" for="">Title</label>
+    <div class="shadow appearance-none border rounded py-2 px-3 text-grey-700">{{ form.title }}</div>
+  </div>
+  <div class="mb-4">
+    <label class="block text-grey-700 text-sm font-bold mb-2" for="">Caption</label>
+    <div class="shadow appearance-none border rounded py-2 px-3 text-grey-700">{{ form.caption }}</div>
+  </div>
+  <button class="bg-green-500 text-white px-5 py-2 rounded" type="submit">Save Changes</button>
+  <a href="{% url 'profile_detail' post.user.username %}" class="ml-3 text-gray-500 text-sm">Cancel</a>
+</form>
+</div>
+{% endblock %}

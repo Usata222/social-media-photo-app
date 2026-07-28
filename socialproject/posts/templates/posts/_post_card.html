@@ -1,0 +1,88 @@
+{% load mathfilters %}
+{% load static %}
+{% load post_extras %}
+
+<div class="post-card rounded overflow-hidden w-full max-w-[470px] mx-auto bg-white shadow-lg mb-6" data-post-id="{{ post.id }}">
+    <a href="{% url 'profile_detail' post.user.username %}" class="user-container flex mx-5 my-5">
+        {% if post.user.profile.photo %}
+        <img class="h-10 w-10 rounded-full object-cover" src="{{post.user.profile.photo.url}}" alt="">
+        {% else %}
+        <img class="h-10 w-10 rounded-full object-cover" src="{% static 'users/images/social.png' %}" alt="">
+        {% endif %}
+        <div class="mx-2 my-2 font-bold "><span class="text-indigo-500">{{post.user}}</span></div>
+    </a>
+    <img class="w-full object-cover" style="height: 24rem;" src="{{post.image.url}}" alt="">
+    <div class="px-6 py-4">
+        <div class="icon-container flex gap-3 items-center">
+            <a data-post-id="{{ post.id }}" data-logged-in="{{ request.user.is_authenticated|yesno:'1,0' }}"
+                class="btn-like" style="cursor:pointer;">
+                {% if request.user in post.liked_by.all %}
+                <img class="w-5 h-5 like-icon" data-liked="1" src="{% static 'users/images/redlike.png' %}" alt="">
+                {% else %}
+                <img class="w-5 h-5 like-icon" data-liked="0" src="{% static 'users/images/whitelike.png' %}" alt="">
+                {% endif %}
+            </a>
+            <span class="like-count text-sm text-gray-600">{{ post.like_count }} like{{ post.like_count|pluralize }}</span>
+
+            <img class="w-5 h-5 ml-3" src="{% static 'users/images/comment.png' %}" alt="">
+            <span class="text-sm text-gray-600">{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
+
+            <img class="w-5 h-5" src="{% static 'users/images/share.png' %}" alt="">
+
+            <a data-post-id="{{ post.id }}" data-logged-in="{{ request.user.is_authenticated|yesno:'1,0' }}"
+                class="btn-bookmark ml-auto" style="cursor:pointer;" title="Save for later">
+                {% if post.id in bookmarked_post_ids %}
+                <span class="bookmark-icon text-indigo-500" data-bookmarked="1">🔖</span>
+                {% else %}
+                <span class="bookmark-icon text-gray-400" data-bookmarked="0">🔖</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{post.title}}</div>
+            <p class="text-gray-700 text-base">{{post.caption|linkify_hashtags}}</p>
+            {% if request.user.is_authenticated and post.user_id == request.user.id %}
+            <div class="mt-2 flex gap-3 text-xs">
+                <a href="{% url 'post_edit' post.id %}" class="text-indigo-500 underline">Edit post</a>
+                <form method="post" action="{% url 'post_delete' post.id %}" onsubmit="return confirm('Delete this post?')" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 underline">Delete post</button>
+                </form>
+            </div>
+            {% endif %}
+    </div>
+    <div class="px-5 py-5">
+        {% for comment in post.comments.all %}
+        <div class="comment-row mb-2" data-comment-id="{{ comment.id }}">
+            {% if comment.user %}
+            <a href="{% url 'profile_detail' comment.user.username %}" class="font-bold text-indigo-600">{{ comment.user }}</a>
+            {% else %}
+            <b>{{ comment.posted_by }}</b>
+            {% endif %}
+            <span class="comment-body">: {{ comment.body }}</span>
+            {% if comment.is_edited %}<span class="text-gray-400 text-xs">(edited)</span>{% endif %}
+            {% if request.user.is_authenticated and comment.user_id == request.user.id %}
+            <a class="text-indigo-500 text-xs ml-2 cursor-pointer comment-edit-btn">Edit</a>
+            <a class="text-red-500 text-xs ml-1 cursor-pointer comment-delete-btn">Delete</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="px-5 py-5">
+        {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'feed' %}" class="bg-white rounded">
+            {% csrf_token %}
+            <div class="flex flex-col sm:flex-row gap-2">
+                <div class="border rounded flex-1 text-grey-700">
+                    {{ comment_form.body }}
+                </div>
+                <input type="hidden" name="post_id" id="post_id" value="{{ post.id }}">
+                <button class="bg-green-500 text-white px-5 py-2 rounded" type="submit">Add</button>
+            </div>
+        </form>
+        {% else %}
+        <button class="text-indigo-500 underline text-sm guest-action-btn">Log in to comment</button>
+        {% endif %}
+    </div>
+</div>

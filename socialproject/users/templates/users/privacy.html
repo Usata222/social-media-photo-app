@@ -1,0 +1,31 @@
+{% extends 'users/base.html' %}
+{% block body %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-700 mb-6">Privacy Policy</h1>
+    <div class="prose text-gray-600 space-y-4">
+        <p>This Privacy Policy explains what information PhotoApp collects when you use the
+        service, how it is used, and the choices you have.</p>
+
+        <h2 class="text-xl font-semibold text-gray-700 mt-6">Information We Collect</h2>
+        <p>We collect the information you provide when creating an account (username, email,
+        name), profile details you add (bio, location, website, profile photo), and content you
+        post (images, captions, comments).</p>
+
+        <h2 class="text-xl font-semibold text-gray-700 mt-6">How We Use Information</h2>
+        <p>We use your information to operate the app: displaying your posts and profile,
+        enabling follows and notifications, and keeping your account secure.</p>
+
+        <h2 class="text-xl font-semibold text-gray-700 mt-6">Sharing</h2>
+        <p>We do not sell your personal information. Public profile details and posts are
+        visible to other users and, where the feed is public, to logged-out visitors.</p>
+
+        <h2 class="text-xl font-semibold text-gray-700 mt-6">Your Choices</h2>
+        <p>You can edit or delete your profile information and posts at any time from your
+        account settings.</p>
+
+        <p class="text-sm text-gray-400 mt-8">Last updated: {% now "F Y" %}. This is placeholder
+        content — replace with a policy reviewed for your actual data practices before going
+        live.</p>
+    </div>
+</div>
+{% endblock %}

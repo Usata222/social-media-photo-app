@@ -1,0 +1,61 @@
+{% extends 'users/base.html' %}
+{% block body %}
+<h1 class="text-2xl m-10">👨🏻 Register User</h1>
+
+<div class="container py-5">
+<form method="POST" class="bg-white shadow-md mx-auto my-10 w-full max-w-md rounded px-8 pt-6 pb-8 mb-4">
+    {% csrf_token %}
+    {% if user_form.non_field_errors %}
+    <div class="mb-4 text-red-500 font-semibold">{{ user_form.non_field_errors }}</div>
+    {% endif %}
+    <div class="mb-2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="">Email</label>
+        <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10"> {{ user_form.email }}</div>
+        {% if user_form.email.errors %}<p class="text-red-500 text-xs italic">{{ user_form.email.errors|striptags }}</p>{% endif %}
+    </div>
+    <div class="mb-2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="">Username</label>
+        <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10"> {{ user_form.username }}</div>
+        {% if user_form.username.errors %}<p class="text-red-500 text-xs italic">{{ user_form.username.errors|striptags }}</p>{% endif %}
+    </div>
+    <div class="mb-2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="">Firstname</label>
+        <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10"> {{ user_form.first_name }}</div>
+    </div>
+     <div class="mb-2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="">Password</label>
+        <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10"> {{ user_form.password }}</div>
+        <p class="text-gray-500 text-xs italic mt-1">At least 8 characters, must include letters and numbers.</p>
+        {% if user_form.password.errors %}<p class="text-red-500 text-xs italic">{{ user_form.password.errors|striptags }}</p>{% endif %}
+    </div>
+     <div class="mb-2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="">Confirm Password</label>
+        <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10"> {{ user_form.password2 }}</div>
+        {% if user_form.password2.errors %}<p class="text-red-500 text-xs italic">{{ user_form.password2.errors|striptags }}</p>{% endif %}
+    </div>
+    <div class="mb-4 flex items-start gap-2">
+        {{ user_form.agree_to_terms }}
+        <label class="text-gray-700 text-sm" for="{{ user_form.agree_to_terms.id_for_label }}">
+            I agree to the <a class="text-indigo-500 underline" href="{% url 'terms' %}" target="_blank">Terms of Use</a>
+            and <a class="text-indigo-500 underline" href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>
+        </label>
+    </div>
+    {% if user_form.agree_to_terms.errors %}<p class="text-red-500 text-xs italic mb-2">{{ user_form.agree_to_terms.errors|striptags }}</p>{% endif %}
+
+    <button class="text-white bg-green-500 px-5 py-2 my-5" type="submit">Register</button>
+</form>
+</div>
+
+<p class="px-10 py-10"><a class="text-indigo-500" href="{% url 'password_reset' %}">Forgot password? Click here to reset</a></p>
+
+
+
+{% endblock%}
+
+
+
+
+
+
+
+

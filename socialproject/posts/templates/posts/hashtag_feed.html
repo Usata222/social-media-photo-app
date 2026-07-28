@@ -1,0 +1,21 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block body %}
+   <div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-3xl font-normal mb-2 text-gray-500">#{{ tag }}</h2>
+   </div>
+   <div id="posts-container" class="grid mx-4 sm:mx-10 lg:mx-60 p-2 sm:p-10 grid-cols-1 gap-6">
+    {% include 'posts/_posts_list.html' %}
+    {% if not posts %}
+    <p class="text-gray-400 text-center">No posts tagged #{{ tag }} yet.</p>
+    {% endif %}
+   </div>
+
+   {% include 'posts/_guest_modal.html' %}
+
+   <script type="text/javascript">
+    window.CSRF_TOKEN = "{{ csrf_token }}"
+    {% include 'posts/_feed_scripts.html' %}
+   </script>
+{% endblock %}

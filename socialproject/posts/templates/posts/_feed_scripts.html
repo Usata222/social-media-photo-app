@@ -1,0 +1,88 @@
+{% load static %}
+function showGuestModal() {
+    document.getElementById('guest-modal').classList.remove('hidden')
+}
+document.getElementById('guest-modal-close').addEventListener('click', function(){
+    document.getElementById('guest-modal').classList.add('hidden')
+})
+$(document).on('click', '.guest-action-btn', showGuestModal)
+
+// Like button: AJAX only, updates the icon + count in place.
+// No redirect/reload, so the page no longer jumps to the top.
+$(document).on('click', '.btn-like', function(){
+    var el = $(this)
+    if (el.data('logged-in') != 1 && el.data('logged-in') != '1') {
+        showGuestModal()
+        return
+    }
+    var post_id = el.data('post-id')
+    $.ajax({
+        method: "POST",
+        url: '/posts/like',
+        data: {post_id: post_id, csrfmiddlewaretoken: window.CSRF_TOKEN},
+        success: function(data) {
+            var icon = el.find('.like-icon')
+            var countEl = el.closest('.icon-container').find('.like-count')
+            icon.attr('src', data.liked ? "{% static 'users/images/redlike.png' %}" : "{% static 'users/images/whitelike.png' %}")
+            countEl.text(data.like_count + ' like' + (data.like_count === 1 ? '' : 's'))
+        }
+    })
+})
+
+// Bookmark toggle: AJAX, updates the icon in place.
+$(document).on('click', '.btn-bookmark', function(){
+    var el = $(this)
+    if (el.data('logged-in') != 1 && el.data('logged-in') != '1') {
+        showGuestModal()
+        return
+    }
+    var post_id = el.data('post-id')
+    $.ajax({
+        method: 'POST',
+        url: '/posts/bookmark',
+        data: {post_id: post_id, csrfmiddlewaretoken: window.CSRF_TOKEN},
+        success: function(data) {
+            var icon = el.find('.bookmark-icon')
+            if (data.bookmarked) {
+                icon.attr('data-bookmarked', '1').removeClass('text-gray-400').addClass('text-indigo-500')
+            } else {
+                icon.attr('data-bookmarked', '0').removeClass('text-indigo-500').addClass('text-gray-400')
+                if (window.location.pathname.indexOf('/posts/bookmarks') === 0) {
+                    el.closest('.post-card').remove()
+                }
+            }
+        }
+    })
+})
+
+// Edit/delete own comments in place via AJAX.
+$(document).on('click', '.comment-edit-btn', function(){
+    var row = $(this).closest('.comment-row')
+    var commentId = row.data('comment-id')
+    var bodyEl = row.find('.comment-body')
+    var currentText = bodyEl.text().replace(/^:\s*/, '')
+    var newText = prompt('Edit comment', currentText)
+    if (newText === null || newText.trim() === '') return
+    $.ajax({
+        method: 'POST',
+        url: '/posts/comment/' + commentId + '/edit',
+        data: {body: newText, csrfmiddlewaretoken: window.CSRF_TOKEN},
+        success: function(data) {
+            bodyEl.text(': ' + data.body)
+        }
+    })
+})
+
+$(document).on('click', '.comment-delete-btn', function(){
+    var row = $(this).closest('.comment-row')
+    var commentId = row.data('comment-id')
+    if (!confirm('Delete this comment?')) return
+    $.ajax({
+        method: 'POST',
+        url: '/posts/comment/' + commentId + '/delete',
+        data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
+        success: function() {
+            row.remove()
+        }
+    })
+})

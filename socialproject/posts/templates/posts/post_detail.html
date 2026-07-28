@@ -1,0 +1,18 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block body %}
+   <div class="p-4 sm:p-10">
+    <a href="{% url 'profile_detail' post.user.username %}" class="text-indigo-500 text-sm ml-4 sm:ml-10">&larr; Back to {{ post.user.username }}'s profile</a>
+   </div>
+   <div class="mx-4 sm:mx-10 lg:mx-auto lg:max-w-[470px]">
+    {% include 'posts/_post_card.html' %}
+   </div>
+
+   {% include 'posts/_guest_modal.html' %}
+
+   <script type="text/javascript">
+    window.CSRF_TOKEN = "{{ csrf_token }}"
+    {% include 'posts/_feed_scripts.html' %}
+   </script>
+{% endblock %}

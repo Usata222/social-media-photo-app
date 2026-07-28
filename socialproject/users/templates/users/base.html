@@ -1,0 +1,151 @@
+{% load static %}
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'users/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'users/style.css' %}">
+        <link rel="stylesheet" href="{% static 'users/dark-mode.css' %}">
+        <script>
+            // Applied before the body renders, so there's no flash of the
+            // wrong theme on page load.
+            (function(){
+                var saved = localStorage.getItem('theme')
+                if (saved === 'dark') {
+                    document.documentElement.dataset.themePending = 'dark'
+                }
+            })()
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <script>
+            if (document.documentElement.dataset.themePending === 'dark') {
+                document.body.classList.add('dark-mode')
+            }
+        </script>
+        <nav class="shadow-lg bg-white sticky top-0 z-50">
+           <div class="px-4 sm:px-6 mx-auto">
+             <div class="flex flex-wrap justify-between items-center gap-y-2 py-2 sm:h-14">
+
+                <!-- Logo -->
+                <div>
+                    <a class="flex items-center" href="{% url 'feed' %}">
+                        <img class="h-8 w-8 mr-2" src="{% static 'users/images/social.png' %}" alt="">
+                        <span class="font-semibold text-lg text-gray-600">Photo App</span>
+                    </a>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                <form method="get" action="{% url 'search_users' %}" class="order-3 sm:order-none w-full sm:w-auto sm:flex-1 sm:mx-6 max-w-xs">
+                    <input type="text" name="q" placeholder="Search username..."
+                        class="w-full border rounded px-3 py-1.5 text-sm shadow-sm">
+                </form>
+                {% endif %}
+
+                <!-- Nav links -->
+                <div class="flex flex-wrap items-center gap-x-1 gap-y-1 text-sm sm:text-base">
+                    {% if request.user.is_authenticated %}
+                        <a class="py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'feed' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'feed' %}">🏠 Feed</a>
+
+                        <a class="py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'create' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'create' %}">➕ New Post</a>
+
+                        <a class="py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'index' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'profile_detail' request.user.username %}">👤 My Profile</a>
+
+                        <a class="py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'edit' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'edit' %}">✏️ Edit Profile</a>
+
+                        <a class="py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'bookmarks' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'bookmarks' %}">🔖 Saved</a>
+
+                        <a class="relative py-2 px-3 font-semibold transition-colors
+                            {% if request.resolver_match.url_name == 'notifications' %}
+                                text-indigo-600 border-b-2 border-indigo-500
+                            {% else %}
+                                text-gray-500 hover:text-indigo-500
+                            {% endif %}"
+                            href="{% url 'notifications' %}">
+                            🔔
+                            {% if unread_notifications_count > 0 %}
+                            <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
+                            {% endif %}
+                        </a>
+
+                        <button id="theme-toggle" type="button" class="py-2 px-3 font-semibold text-gray-500 hover:text-indigo-500 transition-colors" title="Toggle dark mode">
+                            <span id="theme-toggle-icon">🌙</span>
+                        </button>
+
+                        <a class="py-2 px-3 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition-colors"
+                            href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                        <button id="theme-toggle" type="button" class="py-2 px-3 font-semibold text-gray-500 hover:text-indigo-500 transition-colors" title="Toggle dark mode">
+                            <span id="theme-toggle-icon">🌙</span>
+                        </button>
+                        <a class="py-2 px-3 font-semibold text-gray-500 hover:text-indigo-500 transition-colors"
+                            href="{% url 'login' %}">Login</a>
+                        <a class="py-2 px-3 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-600 transition-colors"
+                            href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+
+            </div>
+           </div>
+        </nav>
+
+        {% block body %}
+        {% endblock %}
+
+        <footer class="bg-white border-t mt-10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
+                <p>&copy; {% now "Y" %} PhotoApp. All rights reserved.</p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a class="hover:text-indigo-500" href="{% url 'privacy' %}">Privacy Policy</a>
+                    <a class="hover:text-indigo-500" href="{% url 'terms' %}">Terms of Use</a>
+                    <a class="hover:text-indigo-500" href="mailto:support@photoapp.example">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            (function(){
+                var btn = document.getElementById('theme-toggle')
+                var icon = document.getElementById('theme-toggle-icon')
+                function updateIcon() {
+                    icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙'
+                }
+                updateIcon()
+                btn.addEventListener('click', function(){
+                    document.body.classList.toggle('dark-mode')
+                    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light')
+                    updateIcon()
+                })
+            })()
+        </script>
+    </body>
+</html>

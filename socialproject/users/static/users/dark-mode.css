@@ -1,0 +1,59 @@
+/* Dark mode overrides. Applied via a `dark-mode` class on <body>,
+   toggled by the moon/sun button in the nav and persisted in localStorage. */
+
+body.dark-mode {
+    background-color: #111827;
+    color: #e5e7eb;
+}
+
+body.dark-mode nav {
+    background-color: #1f2937 !important;
+}
+
+body.dark-mode nav .text-gray-600,
+body.dark-mode nav .text-gray-500 {
+    color: #d1d5db !important;
+}
+
+body.dark-mode footer {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+body.dark-mode footer,
+body.dark-mode footer .text-gray-500 {
+    color: #9ca3af !important;
+}
+
+body.dark-mode .bg-white {
+    background-color: #1f2937 !important;
+    color: #e5e7eb;
+}
+
+body.dark-mode .text-gray-700,
+body.dark-mode .text-gray-600 {
+    color: #d1d5db !important;
+}
+
+body.dark-mode .text-gray-400 {
+    color: #9ca3af !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+}
+
+body.dark-mode .shadow-lg,
+body.dark-mode .shadow-md,
+body.dark-mode .shadow-sm,
+body.dark-mode .shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-mode .border,
+body.dark-mode .border-t {
+    border-color: #374151 !important;
+}

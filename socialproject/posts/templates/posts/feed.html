@@ -1,0 +1,57 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block body %}
+   <div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-3xl font-normal mb-2 text-gray-500">Feed</h2>
+   </div>
+   <div id="posts-container" class="grid mx-4 sm:mx-10 lg:mx-60 p-2 sm:p-10 grid-cols-1 gap-6"
+        data-has-next="{{ page_obj.has_next|yesno:'1,0' }}" data-next-page="{% if page_obj.has_next %}{{ page_obj.next_page_number }}{% endif %}">
+    {% include 'posts/_posts_list.html' %}
+   </div>
+   <div id="feed-loading" class="hidden text-center text-gray-400 py-6">Loading more posts...</div>
+
+   {% include 'posts/_guest_modal.html' %}
+
+   <script type="text/javascript">
+    window.CSRF_TOKEN = "{{ csrf_token }}"
+    {% include 'posts/_feed_scripts.html' %}
+
+    // Infinite scroll: fetch the next page of posts and append them.
+    (function(){
+        var container = document.getElementById('posts-container')
+        var loadingEl = document.getElementById('feed-loading')
+        var loading = false
+
+        function loadNextPage() {
+            var nextPage = container.dataset.nextPage
+            if (!nextPage || container.dataset.hasNext !== '1' || loading) return
+            loading = true
+            loadingEl.classList.remove('hidden')
+            $.ajax({
+                method: 'GET',
+                url: '{% url "feed" %}?page=' + nextPage + '&partial=1',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.html && data.html.trim()) {
+                        container.insertAdjacentHTML('beforeend', data.html)
+                    }
+                    container.dataset.hasNext = data.has_next ? '1' : '0'
+                    container.dataset.nextPage = data.next_page || ''
+                    loadingEl.classList.add('hidden')
+                    loading = false
+                },
+                error: function() {
+                    loadingEl.classList.add('hidden')
+                    loading = false
+                }
+            })
+        }
+
+        window.addEventListener('scroll', function(){
+            var nearBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 600)
+            if (nearBottom) loadNextPage()
+        })
+    })()
+   </script>
+{% endblock %}
