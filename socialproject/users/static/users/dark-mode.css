@@ -57,3 +57,8 @@ body.dark-mode .border,
 body.dark-mode .border-t {
     border-color: #374151 !important;
 }
+
+
+body.dark-mode .bg-gray-100 {
+    background-color: #111827 !important;
+}

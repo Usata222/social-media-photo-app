@@ -1,4 +1,25 @@
 {% load static %}
+// Share button: native share sheet where supported (mostly mobile),
+// falls back to copying the post link to the clipboard.
+$(document).on('click', '.btn-share', function(){
+    var el = $(this)
+    var postId = el.data('post-id')
+    var url = window.location.origin + '/posts/' + postId
+
+    if (navigator.share) {
+        navigator.share({url: url}).catch(function(){ /* user cancelled the share sheet, ignore */ })
+        return
+    }
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function(){
+            var msg = el.closest('.icon-container').find('.share-copied-msg')
+            msg.removeClass('hidden')
+            setTimeout(function(){ msg.addClass('hidden') }, 2000)
+        })
+    }
+})
+
 function showGuestModal() {
     document.getElementById('guest-modal').classList.remove('hidden')
 }

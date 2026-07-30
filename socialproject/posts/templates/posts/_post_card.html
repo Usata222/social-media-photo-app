@@ -11,7 +11,7 @@
         {% endif %}
         <div class="mx-2 my-2 font-bold "><span class="text-indigo-500">{{post.user}}</span></div>
     </a>
-    <img class="w-full object-cover" style="height: 24rem;" src="{{post.image.url}}" alt="">
+    <img class="w-full object-contain bg-gray-100" style="height: 24rem;" src="{{post.image.url}}" alt="">
     <div class="px-6 py-4">
         <div class="icon-container flex gap-3 items-center">
             <a data-post-id="{{ post.id }}" data-logged-in="{{ request.user.is_authenticated|yesno:'1,0' }}"
@@ -27,7 +27,10 @@
             <img class="w-5 h-5 ml-3" src="{% static 'users/images/comment.png' %}" alt="">
             <span class="text-sm text-gray-600">{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
 
-            <img class="w-5 h-5" src="{% static 'users/images/share.png' %}" alt="">
+            <a data-post-id="{{ post.id }}" class="btn-share" style="cursor:pointer;" title="Share">
+                <img class="w-5 h-5" src="{% static 'users/images/share.png' %}" alt="">
+            </a>
+            <span class="share-copied-msg text-xs text-green-600 hidden">Link copied!</span>
 
             <a data-post-id="{{ post.id }}" data-logged-in="{{ request.user.is_authenticated|yesno:'1,0' }}"
                 class="btn-bookmark ml-auto" style="cursor:pointer;" title="Save for later">
