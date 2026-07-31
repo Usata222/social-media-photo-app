@@ -82,7 +82,8 @@
                             🔔
                             {% if unread_notifications_count > 0 %}<span class="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full"></span>{% endif %}
                         </a>
-                        <button id="mobile-menu-toggle" type="button" class="p-2 text-lg text-gray-500" aria-label="More">☰</button>
+                        <button id="mobile-menu-toggle" type="button" class="p-2 text-lg text-gray-500" aria-label="More"
+                            onclick="var m=document.getElementById('mobile-menu'); m.style.display = (m.style.display==='block') ? 'none' : 'block';">☰</button>
                     {% else %}
                         <button class="theme-toggle-btn p-2 text-lg text-gray-500" type="button" title="Toggle dark mode">
                             <span class="theme-toggle-icon">🌙</span>
@@ -96,7 +97,7 @@
 
             {% if request.user.is_authenticated %}
             <!-- Mobile dropdown panel, hidden until the ☰ button is tapped -->
-            <div id="mobile-menu" class="hidden sm:hidden bg-white border-t shadow-lg">
+            <div id="mobile-menu" class="sm:hidden bg-white border-t shadow-lg" style="display: none;">
                 <a class="block px-4 py-3 border-b text-gray-700 font-semibold" href="{% url 'create' %}">➕ New Post</a>
                 <a class="block px-4 py-3 border-b text-gray-700 font-semibold" href="{% url 'profile_detail' request.user.username %}">👤 My Profile</a>
                 <a class="block px-4 py-3 border-b text-gray-700 font-semibold" href="{% url 'edit' %}">✏️ Edit Profile</a>
@@ -146,12 +147,11 @@
                 var toggle = document.getElementById('mobile-menu-toggle')
                 var menu = document.getElementById('mobile-menu')
                 if (!toggle || !menu) return
-                toggle.addEventListener('click', function(){
-                    menu.classList.toggle('hidden')
-                })
-                // Close the menu automatically if you tap a link inside it
+                // Auto-close the menu if you tap a link inside it (the open/close
+                // toggle itself is handled by the onclick attribute on the button,
+                // so it doesn't depend on this script attaching successfully).
                 menu.querySelectorAll('a').forEach(function(link){
-                    link.addEventListener('click', function(){ menu.classList.add('hidden') })
+                    link.addEventListener('click', function(){ menu.style.display = 'none' })
                 })
             })()
         </script>
