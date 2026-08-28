@@ -4,14 +4,18 @@ A lightweight, Instagram-style photo-sharing social app built with Django — po
 
 ## Demo / Screenshots
 
-<!-- TODO: add a live demo link here once deployed, e.g.: -->
-<!-- 🔗 **Live demo:** https://your-app.onrender.com -->
+## Demo / Screenshots
 
-<!-- TODO: add screenshots here. A few suggestions for what to capture: -->
-<!-- - Feed view (logged in) -->
-<!-- - Public profile page -->
-<!-- - Notifications page -->
-<!-- - Mobile view -->
+**Live demo:** https://social-media-photo-app.onrender.com/
+
+
+<!-- Replace the lines below with your actual image paths or URLs -->
+
+**Feed screenshot**
+![Feed screenshot](screenshots/homepage.png)
+
+**Profile screenshot**
+![Profile screenshot](screenshots/detail.png)
 
 ```
 ![Feed screenshot](docs/screenshots/feed.png)
