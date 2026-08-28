@@ -21,7 +21,6 @@ A lightweight, Instagram-style photo-sharing social app built with Django — po
 ![Feed screenshot](docs/screenshots/feed.png)
 ![Profile screenshot](docs/screenshots/profile.png)
 ```
-> Put your screenshot image files in a `docs/screenshots/` folder in the repo, then reference them above with the same relative path (or swap in your live demo URL once deployed).
 
 ## Features
 
